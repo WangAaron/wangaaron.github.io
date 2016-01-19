@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="Keywords" content="blog"/>
+    <meta name="Description" content="blog"/>
+    <title>Simple</title>
+    <link rel="shortcut icon" href="/static/favicon.png"/>
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+</head>
+<body>
+<div class="main">
+    <div class="header">
+    	<ul id="pages">
+            <li><a href="/">home</a></li>
+            <li><a href="/#/tags">tags</a></li>
+            <li><a href="/#/archive">archive</a></li>
+    	</ul>
+    </div>
+	<div class="wrap-header">
+	<h1>
+    <a href="/" id="title"></a>
+	</h1>
+	</div>
+<div id="md" style="display: none;">
+<!-- markdown -->
+这是我人生当中第二次误机，但情节却非常狗血……实在难以启齿。
+
+第一次误机是在若干年前，从北京出差无锡。因为北京机场高速严重拥堵，导致航班没赶上，这个还可以理解，索性改签飞上海，然后从上海高铁到无锡，总算是解决了问题。
+
+这一次是因为到沈阳出差，顺便回家过一个小周末。临回京，老妈强烈要求坐地铁再加出租车的线路，说这样又快又省钱，我便听信了。
+
+老妈送到地铁里，给买了一张终点站的票，于是半个小时后，我到了地铁的重点，这时候距离航班登机还有一小时时间，但是这个地铁终点站竟然在鸟不拉屎的地方，根本没有出租车啊……
+
+于是用滴滴打车叫车，挡出租车赶来的时候，发现已经错过了最好的时机，理论上还来得及。于是直奔机场，60元车费到了机场，发现已经无法值机……
+
+改签了三个半小时之后的航班，于是有了以下的文字。
+<!-- markdown end -->
+</div>
+<div class="entry" id="main">
+<!-- content -->
+<p>这是我人生当中第二次误机，但情节却非常狗血……实在难以启齿。</p>
+
+<p>第一次误机是在若干年前，从北京出差无锡。因为北京机场高速严重拥堵，导致航班没赶上，这个还可以理解，索性改签飞上海，然后从上海高铁到无锡，总算是解决了问题。</p>
+
+<p>这一次是因为到沈阳出差，顺便回家过一个小周末。临回京，老妈强烈要求坐地铁再加出租车的线路，说这样又快又省钱，我便听信了。</p>
+
+<p>老妈送到地铁里，给买了一张终点站的票，于是半个小时后，我到了地铁的重点，这时候距离航班登机还有一小时时间，但是这个地铁终点站竟然在鸟不拉屎的地方，根本没有出租车啊……</p>
+
+<p>于是用滴滴打车叫车，挡出租车赶来的时候，发现已经错过了最好的时机，理论上还来得及。于是直奔机场，60元车费到了机场，发现已经无法值机……</p>
+
+<p>改签了三个半小时之后的航班，于是有了以下的文字。</p>
+<!-- content end -->
+</div>
+<br>
+<br>
+    <div id="disqus_thread"></div>
+	<div class="footer">
+		<p>© Copyright 2014 by isnowfy, Designed by isnowfy</p>
+	</div>
+</div>
+<script src="main.js"></script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ["\\(", "\\)"]], processEscapes: true}});
+</script>
+<script id="content" type="text/mustache">
+    <h1>{{title}}</h1>
+    <div class="tag">
+    {{date}}
+    {{#tags}}
+    <a href="/#/tag/{{name}}">#{{name}}</a>
+    {{/tags}}
+    </div>
+</script>
+<script id="pagesTemplate" type="text/mustache">
+    {{#pages}}
+    <li>
+        <a href="{{path}}">{{title}}</a>
+    </li>
+    {{/pages}}
+</script>
+<script>
+$(document).ready(function() {
+    $.ajax({
+        url: "main.json",
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+            $("#title").html(data.name);
+            var pagesTemplate = Hogan.compile($("#pagesTemplate").html());
+            var pagesHtml = pagesTemplate.render({"pages": data.pages});
+            $("#pages").append(pagesHtml);
+            //path
+            var path = "miss_flight.html";
+            //path end
+            var now = 0;
+            for (var i = 0; i < data.posts.length; ++i)
+                if (path == data.posts[i].path)
+                    now = i;
+            var post = data.posts[now];
+            var tmp = post.tags.split(" ");
+            var tags = [];
+            for (var i = 0; i < tmp.length; ++i)
+                if (tmp[i].length > 0)
+                    tags.push({"name": tmp[i]});
+            var contentTemplate = Hogan.compile($("#content").html());
+            var contentHtml = contentTemplate.render({"title": post.title, "tags": tags, "date": post.date});
+            $("#main").prepend(contentHtml);
+            if (data.disqus_shortname.length > 0) {
+                var disqus_shortname = data.disqus_shortname;
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            }
+        }
+    });
+});
+</script>
+</body>
+</html>
